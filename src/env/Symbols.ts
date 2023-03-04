@@ -3,9 +3,11 @@ export const Symbols = {
     UserSerializer: Symbol.for('UserSerializer'),
     /* repositories */
     UserRepository: Symbol.for('UserRepository'),
+    ClientRepository: Symbol.for('ClientRepository'),
     /* use cases */
     SignUpUseCase: Symbol.for('SignUpUseCase'),
     SignInUseCase: Symbol.for('SignInUseCase'),
+    CreateClientUseCase: Symbol.for('CreateClientUseCase'),
     /* handlers */
     /* controllers */
     SignUpController: Symbol.for('SignUpController'),

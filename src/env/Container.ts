@@ -6,8 +6,10 @@ import { UserSerializer } from '../contexts/authentication/infrastructure/serial
 /* repositories */
 import { UserRepository } from '../contexts/authentication/domain/user';
 import { MongooseUserRepository } from '../contexts/authentication/infrastructure/repositories';
+/* import { ClientRepository } from '../contexts/clients/domain/client'; */
 /* use cases */
 import { SignInUseCase, SignUpUseCase } from '../contexts/authentication/application/commands';
+import { CreateClientUseCase } from '../contexts/clients/application/commands';
 /* handlers */
 /* controllers */
 import {
@@ -24,9 +26,11 @@ const container = new Container();
 container.bind<UserSerializer>(Symbols.UserSerializer).to(UserSerializer);
 /* repositories */
 container.bind<UserRepository>(Symbols.UserRepository).to(MongooseUserRepository);
+//container.bind<ClientRepository>(Symbols.ClientRepository).to(MongooseClientRepository);
 /* use cases */
 container.bind<SignUpUseCase>(Symbols.SignUpUseCase).to(SignUpUseCase);
 container.bind<SignInUseCase>(Symbols.SignInUseCase).to(SignInUseCase);
+container.bind<CreateClientUseCase>(Symbols.CreateClientUseCase).to(CreateClientUseCase);
 /* handlers */
 /* controllers */
 container.bind<SignUpController>(Symbols.SignUpController).to(SignUpController);
