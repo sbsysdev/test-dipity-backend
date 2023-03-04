@@ -4,13 +4,12 @@ export const Symbols = {
     /* repositories */
     UserRepository: Symbol.for('UserRepository'),
     /* use cases */
-    CreateUserUseCase: Symbol.for('CreateUserUseCase'),
-    GetUserListUseCase: Symbol.for('GetUserListUseCase'),
+    SignUpUseCase: Symbol.for('SignUpUseCase'),
+    SignInUseCase: Symbol.for('SignInUseCase'),
     /* handlers */
-    UserCreatedEventHandler: Symbol.for('UserCreatedEventHandler'),
     /* controllers */
-    CreateUserController: Symbol.for('CreateUserController'),
-    GetUserListController: Symbol.for('GetUserListController'),
+    SignUpController: Symbol.for('SignUpController'),
+    SignInController: Symbol.for('SignInController'),
     /* routes */
     AuthenticationRoutes: Symbol.for('AuthenticationRoutes'),
     /* apps */

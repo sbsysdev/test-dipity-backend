@@ -2,9 +2,19 @@ import { inject, injectable } from 'inversify';
 import { Symbols } from '../../../../env';
 import { UseCase } from '../../../shared/application';
 import { Result, UniqueEntityID } from '../../../shared/domain';
-import { Email, Password, UserAggregate, UserError, UserRepository } from '../../domain/user';
+import {
+    Email,
+    LastName,
+    Name,
+    Password,
+    UserEntity,
+    UserError,
+    UserRepository,
+} from '../../domain/user';
 
-export type CreateUserRequest = {
+export type SignUpRequest = {
+    name: string;
+    lastname: string;
     email: string;
     password: string;
 };
@@ -12,10 +22,18 @@ export type CreateUserRequest = {
 type RESPONSE = Result<UserError, void>;
 
 @injectable()
-export class CreateUserUseCase implements UseCase<CreateUserRequest, RESPONSE> {
+export class SignUpUseCase implements UseCase<SignUpRequest, RESPONSE> {
     constructor(@inject(Symbols.UserRepository) private userRepository: UserRepository) {}
 
-    async execute(request: CreateUserRequest): Promise<RESPONSE> {
+    async execute(request: SignUpRequest): Promise<RESPONSE> {
+        const name = Name.create({ name: request.name });
+
+        if (name.isError) return Result.Error(name.getError());
+
+        const lastname = LastName.create({ lastname: request.lastname });
+
+        if (lastname.isError) return Result.Error(lastname.getError());
+
         const email = Email.create({ email: request.email });
 
         if (email.isError) return Result.Error(email.getError());
@@ -24,8 +42,14 @@ export class CreateUserUseCase implements UseCase<CreateUserRequest, RESPONSE> {
 
         if (password.isError) return Result.Error(password.getError());
 
-        const user = UserAggregate.createToSave(
+        const isEmailAvailable = await this.userRepository.isEmailAvailable(email.getSuccess());
+
+        if (isEmailAvailable.isError) return Result.Error(isEmailAvailable.getError());
+
+        const user = UserEntity.create(
             {
+                name: name.getSuccess(),
+                lastname: lastname.getSuccess(),
                 email: email.getSuccess(),
                 password: password.getSuccess(),
             },
@@ -37,8 +61,6 @@ export class CreateUserUseCase implements UseCase<CreateUserRequest, RESPONSE> {
         const stored = await this.userRepository.create(user.getSuccess());
 
         if (stored.isError) return Result.Error(stored.getError());
-
-        user.getSuccess().dispathEvents();
 
         return Result.Success();
     }

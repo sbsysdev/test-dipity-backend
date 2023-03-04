@@ -1,8 +1,8 @@
 import { Express, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import {
-    CreateUserController,
-    GetUserListController,
+    SignInController,
+    SignUpController,
 } from '../../../contexts/authentication/infrastructure/controllers';
 import { Symbols } from '../../../env';
 import { Routes } from '../../../types';
@@ -12,13 +12,13 @@ export class AuthenticationRoutes implements Routes<Express> {
     private router = Router();
 
     constructor(
-        @inject(Symbols.GetUserListController) private getUserListController: GetUserListController,
-        @inject(Symbols.CreateUserController) private createUserController: CreateUserController
+        @inject(Symbols.SignUpController) private signUpController: SignUpController,
+        @inject(Symbols.SignInController) private signInController: SignInController
     ) {}
 
     configure(app: Express, path: string): void {
-        this.router.get('/', (req, res) => this.getUserListController.execute(req, res));
-        this.router.post('/', (req, res) => this.createUserController.execute(req, res));
+        this.router.post('/sign-up', (req, res) => this.signUpController.execute(req, res));
+        this.router.post('/sign-in', (req, res) => this.signInController.execute(req, res));
 
         app.use(path, this.router);
     }

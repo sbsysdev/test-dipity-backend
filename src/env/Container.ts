@@ -5,14 +5,15 @@ import { Symbols } from './Symbols';
 import { UserSerializer } from '../contexts/authentication/infrastructure/serializers';
 /* repositories */
 import { UserRepository } from '../contexts/authentication/domain/user';
-import { InMemoryUserRepository } from '../contexts/authentication/infrastructure/repositories';
+import { MongooseUserRepository } from '../contexts/authentication/infrastructure/repositories';
 /* use cases */
-import { CreateUserUseCase } from '../contexts/authentication/application/commands';
-import { GetUserListUseCase } from '../contexts/authentication/application/queries';
+import { SignInUseCase, SignUpUseCase } from '../contexts/authentication/application/commands';
 /* handlers */
-import { UserCreatedEventHandler } from '../contexts/authentication/application/handlers';
 /* controllers */
-import { CreateUserController, GetUserListController } from '../contexts/authentication/infrastructure/controllers';
+import {
+    SignInController,
+    SignUpController,
+} from '../contexts/authentication/infrastructure/controllers';
 /* routes */
 import { AuthenticationRoutes } from '../apps/api/routes';
 /* apps */
@@ -22,15 +23,14 @@ const container = new Container();
 /* serializers */
 container.bind<UserSerializer>(Symbols.UserSerializer).to(UserSerializer);
 /* repositories */
-container.bind<UserRepository>(Symbols.UserRepository).to(InMemoryUserRepository);
+container.bind<UserRepository>(Symbols.UserRepository).to(MongooseUserRepository);
 /* use cases */
-container.bind<CreateUserUseCase>(Symbols.CreateUserUseCase).to(CreateUserUseCase);
-container.bind<GetUserListUseCase>(Symbols.GetUserListUseCase).to(GetUserListUseCase);
+container.bind<SignUpUseCase>(Symbols.SignUpUseCase).to(SignUpUseCase);
+container.bind<SignInUseCase>(Symbols.SignInUseCase).to(SignInUseCase);
 /* handlers */
-container.bind<UserCreatedEventHandler>(Symbols.UserCreatedEventHandler).to(UserCreatedEventHandler);
 /* controllers */
-container.bind<CreateUserController>(Symbols.CreateUserController).to(CreateUserController);
-container.bind<GetUserListController>(Symbols.GetUserListController).to(GetUserListController);
+container.bind<SignUpController>(Symbols.SignUpController).to(SignUpController);
+container.bind<SignInController>(Symbols.SignInController).to(SignInController);
 /* routes */
 container.bind<AuthenticationRoutes>(Symbols.AuthenticationRoutes).to(AuthenticationRoutes);
 /* apps */

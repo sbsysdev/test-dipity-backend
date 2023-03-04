@@ -1,20 +1,36 @@
 import { injectable } from 'inversify';
 import { Result, UniqueEntityID } from '../../../shared/domain';
 import { Serializer } from '../../../shared/infrastructure';
-import { Email, Password, UserAggregate, UserError } from '../../domain/user';
+import { Email, LastName, Name, Password, UserEntity, UserError } from '../../domain/user';
 import { CreateUserDTO, UserModel, UserResponse } from '../models';
 
 @injectable()
-export class UserSerializer extends Serializer<UserError, UserAggregate, UserModel, CreateUserDTO, UserResponse> {
-    public fromEntityToDTO(entity: UserAggregate): CreateUserDTO {
+export class UserSerializer extends Serializer<
+    UserError,
+    UserEntity,
+    UserModel,
+    CreateUserDTO,
+    UserResponse
+> {
+    public fromEntityToDTO(entity: UserEntity): CreateUserDTO {
         return {
             id: entity.id.toString(),
+            name: entity.props.name.value,
+            lastname: entity.props.lastname.value,
             email: entity.props.email.value,
             password: entity.props.password.value,
         };
     }
 
-    public fromModelToEntity(model: UserModel): Result<UserError, UserAggregate> {
+    public fromModelToEntity(model: UserModel): Result<UserError, UserEntity> {
+        const name = Name.create({ name: model.name });
+
+        if (name.isError) return Result.Error(name.getError());
+
+        const lastname = LastName.create({ lastname: model.lastname });
+
+        if (lastname.isError) return Result.Error(lastname.getError());
+
         const email = Email.create({ email: model.email });
 
         if (email.isError) return Result.Error(email.getError());
@@ -23,8 +39,10 @@ export class UserSerializer extends Serializer<UserError, UserAggregate, UserMod
 
         if (password.isError) return Result.Error(password.getError());
 
-        const user = UserAggregate.create(
+        const user = UserEntity.create(
             {
+                name: name.getSuccess(),
+                lastname: lastname.getSuccess(),
                 email: email.getSuccess(),
                 password: password.getSuccess(),
             },
@@ -36,14 +54,12 @@ export class UserSerializer extends Serializer<UserError, UserAggregate, UserMod
         return Result.Success(user.getSuccess());
     }
 
-    public fromEntityToResponse(entity: UserAggregate): UserResponse {
+    public fromEntityToResponse(entity: UserEntity): UserResponse {
         return {
             id: entity.id.toString(),
+            name: entity.props.name.value,
+            lastname: entity.props.lastname.value,
             email: entity.props.email.value,
-            password: entity.props.password.value,
-            status: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
         };
     }
 }

@@ -1,12 +1,12 @@
 import { container } from './env';
 import { Api } from './apps';
 /* authentication handlers */
-import { UserCreatedEventHandler } from './contexts/authentication/application/handlers';
+/* import { UserCreatedEventHandler } from './contexts/authentication/application/handlers'; */
 
 function handlers(): void {
-    const handlerList = [UserCreatedEventHandler];
+    /* const handlerList = [UserCreatedEventHandler];
 
-    handlerList.forEach(handler => container.resolve(handler).setupSubscriptions());
+    handlerList.forEach(handler => container.resolve(handler).setupSubscriptions()); */
 }
 
 function setup() {

@@ -1,2 +1,2 @@
 /* import/export */
-export * from './InMemoryUser.repository';
+export * from './MongooseUser.repository';

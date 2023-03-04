@@ -1,16 +1,22 @@
 import express, { json, urlencoded } from 'express';
+import cors from 'cors';
 import { inject, injectable } from 'inversify';
 import { CONSTANTS, Symbols } from '../../env';
 import { App } from '../../types';
 import { mergeRoutes } from '../../utils';
 import { AuthenticationRoutes } from './routes';
+import { configureMongoose } from './configs';
 
 @injectable()
 export class Api implements App {
     private app = express();
     private apiPathV1 = mergeRoutes('/', CONSTANTS.MICROSERVICE, '/api/v1');
 
-    constructor(@inject(Symbols.AuthenticationRoutes) private authenticationRoutes: AuthenticationRoutes) {
+    constructor(
+        @inject(Symbols.AuthenticationRoutes) private authenticationRoutes: AuthenticationRoutes
+    ) {
+        configureMongoose();
+
         this.configure();
         this.routes();
     }
@@ -21,6 +27,8 @@ export class Api implements App {
 
         this.app.use(json());
         this.app.use(urlencoded({ extended: true }));
+
+        this.app.use(cors({ origin: '*' }));
     }
 
     private routes(): void {

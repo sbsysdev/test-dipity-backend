@@ -11,7 +11,8 @@ export class Password extends ValueObject<PasswordProps> {
     }
 
     public static create(props: PasswordProps): Result<UserError, Password> {
-        if (!props.password || props.password.length === 0) return Result.Error(UserError.NotValidPasswordError(props));
+        if (!props.password || props.password.length === 0)
+            return Result.Error(UserError.NotValidPasswordError(props));
 
         return Result.Success(new Password(props));
     }

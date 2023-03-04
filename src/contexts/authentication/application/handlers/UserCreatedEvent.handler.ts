@@ -11,7 +11,10 @@ export class UserCreatedEventHandler implements DomainEventHandler {
     }
 
     setupSubscriptions(): void {
-        EventDispatcher.registerDispatcher(this.onUserCreatedEvent.bind(this), UserCreatedEvent.EVENT_NAME);
+        EventDispatcher.registerDispatcher(
+            this.onUserCreatedEvent.bind(this),
+            UserCreatedEvent.EVENT_NAME
+        );
     }
 
     private async onUserCreatedEvent(event: UserCreatedEvent): Promise<void> {
